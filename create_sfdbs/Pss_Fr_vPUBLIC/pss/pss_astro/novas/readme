@@ -1,0 +1,41 @@
+Download del file eopc04.62-now   
+(http://hpiers.obspm.fr/eoppc/eop/eopc04_05/)
+
+[pia@dell novas]$ ./scrivi_eop.pl <eopc04.62-now >eopc04_mod
+
+e questo e' il file che viene usato con nome DELTANUT in PSS_deltanut
+
+./taglia_eopc.pl <eopc04_mod >ut1-utc_mod1.dat
+
+e questo e' il file che viene usato con nome UTC2UT1 in utc2ut1
+
+
+Ossia:
+
+[pia@piapc novas]$ cp eopc04_mod eopc04_mod-old
+[pia@piapc novas]$ cp  ut1-utc_mod1.dat  ut1-utc_mod1-old.dat
+
+Se eopc04.62-now ha il segno meno attaccato alla colonna precedente con emacs sostituire la
+stringa con replace-string (lo si puo' fare sia su eopc04.62-now che sul secondo file eopc04_mod (che ha gli anni dal 1991)
+	     -
+	(with)   -  (ossia spazio meno)
+[pia@piapc novas]$ ./scrivi_eop.pl  <eopc04.62-now >eopc04_mod
+[pia@piapc novas]$ ./taglia_eopc.pl <eopc04_mod >ut1-utc_mod1.dat
+
+*************************************************
+************************************************
+
+14 luglio 2008:
+Procedura per i dati dello IERS cambiati di formato, aggiunte alcune colonne e i mesi
+non piu' con i nomi, ma con le lettere.
+
+Si scarica lo stesso file eopc04.62-now, ma ho aggiunto uno script che leva le colonne
+in piu'
+
+[pia@piapc novas]$ ./scrivi_eop.pl  <eopc04.62-now >eopc04_mod1
+[pia@piapc novas]$ ./scrivi_eopcmod.pl  <eopc04_mod1 >eopc04_mod
+[pia@piapc novas]$ ./taglia_eopc.pl <eopc04_mod >ut1-utc_mod1.dat
+
+Il programma PSS_astro.c ora legge i mesi con il numero nel file eopc04_mod
+(function  void  PSS_deltanut(double utc, double *ddpsi,double *ddeps))
+

@@ -1,0 +1,32 @@
+SITE=$1
+
+if [[ -z ${SITE} ]]
+then
+	echo "Usage: ./compila SITE"
+	echo "where SITE=CNAF|ROMA|LHO..."
+	echo "to compile astro libraries for SITE"
+	exit 1
+fi
+
+echo "Compiling astro libraries for $SITE"
+
+
+rm -f  *.o
+gcc -fcommon -g -Wall -W -c crea_sfdb.c
+gcc -fcommon -g -Wall -W -c ../pss_lib/pss_gw.c
+gcc -fcommon -g -Wall -W -c ../pss_lib/pss_math.c
+gcc -fcommon -g -Wall -W -c ../pss_lib/pss_serv.c
+gcc -fcommon -g -Wall -W -c ../pss_lib/pss_snag.c
+gcc -fcommon -g -Wall -W -c ../pss_lib/pss_sfc.c
+gcc -fcommon -g -Wall -W  -I ../../framelib/ -c ../pss_lib/pss_frame.c
+gcc -c ../pss_astro/novas/novas.c
+gcc -c ../pss_astro/novas/novascon.c
+gcc -c ../pss_astro/novas/solsys3.c
+gcc -c ../pss_astro/novas/readeph0.c
+gcc -D $SITE -c ../pss_astro/pss_astro.c
+gcc -c ../pss_astro/daspostare.c
+gcc -fcommon -g -Wall -W -c pss_ante.c
+gcc -fcommon -g -Wall -W -c pss_sfdb.c
+gcc -fcommon -g -Wall -W -c pss_sds.c
+gcc -fcommon -g -Wall -W -c pss_frameS.c
+gcc -fcommon -g -Wall -W -o crea_sfdb.out -D_FILE_OFFSET_BITS=64 crea_sfdb.o pss_gw.o pss_math.o pss_serv.o pss_snag.o  pss_sfc.o pss_frame.o pss_ante.o pss_sfdb.o  pss_sds.o   pss_frameS.o pss_astro.o daspostare.o novas.o novascon.o solsys3.o readeph0.o -lm ../../framelib/libFrame.a

@@ -1,0 +1,52 @@
+The main code is in the folder pss_sfdb
+
+It is crea_sfdb.c
+
+To compile it:  ./compila RELATIVE
+
+To run it:
+
+1- ./crea_sfdb.out < input
+
+2- ./crea_sfdb.out 
+and then at the prompt answer to the questions...
+
+
+
+Input files are in the ffl list of  the frame files of each detector
+
+Output files are SFDB files.
+
+You can produce FFTs of any length (in practice the closer power of 2 will be used).
+Follows examples on how we use the code to produce 4 different sets of FFTs.
+The four frequency bands and their length are described in the All Sky O2 paper and referecnes therein.
+
+
+Example of input files (or input to give at the prompt)
+
+H1  % (or L1 )
+2
+2
+2016-11-30_2016-11-30_2016-12-30.ffl   %name of the ffl file
+pippo                                  %whatever you want here...
+H1:DCH-CLEAN_STRAIN_C02                % channel name. For Livingston H1 --> L1
+64                                     % subsampling factor. Use 64 for the first band, up to 128 Hz. Use 16 for the second (128-512 Hz).  3rd: 8  4th: 4
+1
+134217728			       %number of samples in the FFT. This is for the first band. For the second: 67108864. 3rd: 33554432. 4th: 16777216
+2                                      % with 2 FFTs overlaps. This is what we use. 
+1000000                                % put here the total number of FFTs you want to produce. If very high then all the possible FFTs will be done
+128                                    % this is a subsampling factor, used to store a reduced version of the power spctra in the header of files
+5                                      % window used
+100                                    % frequency of the veto to clean the data
+-1                                     % use always -1
+100                                    % total number of FFT in the file
+
+
+Format of the files:
+header
+data (Real, Imaginary part)
+
+Tools to read them are in the public software SNAG (matlab based)
+
+The code extract_band.c gives an example on how to read SFDB files and extract a bandwitdh.
+The function used is readfilesfdb, and it is in (the library) pss_sfdb.c
