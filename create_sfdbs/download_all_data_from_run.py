@@ -43,7 +43,34 @@ def download_strain_file(download_url,outdir='./'):
     return filename
 
 
+## Function to download gravitational-wave frame (.gwf) files
 
+def download_gwf(channel='O3b_4KHZ_R1',detector='H1',save_dir='./data/',gps_start=None,gps_end=None):
+    os.makedirs(save_dir, exist_ok=True)
+
+    # fetch strain files
+    strain_files = fetch_strain_list(channel, detector,gps_start,gps_end)
+    print(f"Found {len(strain_files)} files")
+    try:
+        with open("filesdone.txt", "r") as fp:
+            donelist = [f.strip() for f in fp.readlines()]
+    except FileNotFoundError:
+        donelist = []
+    for afile in strain_files:
+        if afile["url"] in donelist:
+            print("already downloaded")
+            continue
+        if afile["format"] == "gwf":
+            print(f"Downloading {afile['url']}")
+            fname = download_strain_file(afile["url"], outdir=save_dir)
+            # tseries = TimeSeries.read(fname, format="hdf5.gwosc")
+            with open("filesdone.txt", "a") as fp:
+                fp.write(f"{afile['url']}\n")
+            # process tseries here
+
+            
+
+            
 
 import argparse
 import os

@@ -7,11 +7,11 @@ import numpy as np
 
 
 @dataclass
-class PiaHead09:
+class SFDBheader:
     # matches MATLAB piahead.* fields (plus eof)
     eof: int = 0
     def __repr__(self):
-        lines = ["PiaHead09:"]
+        lines = ["SFDBheader:"]
         for k, v in self.__dict__.items():
             lines.append(f"  {k:<15} = {v}")
         return "\n".join(lines)
@@ -42,14 +42,14 @@ def _read_array(f: BinaryIO, dtype: np.dtype, count: int) -> np.ndarray:
     return np.frombuffer(b, dtype=dt, count=int(count))
 
 
-def pia_read_block_09(
+def sfdb_read_an_FFT(
     fid: BinaryIO,
     det: int = 0,
     want_sft: bool = True,
     endian: str = "<",
-) -> Tuple[PiaHead09 | int, np.ndarray | int, np.ndarray | int, Optional[np.ndarray] | int]:
+) -> Tuple[SFDBheader | int, np.ndarray | int, np.ndarray | int, Optional[np.ndarray] | int]:
     """
-    Python translation of MATLAB pia_read_block_09(fid, det).
+    Python translation of MATLAB sfdb_read_an_FFT(fid, det).
 
     Parameters
     ----------
@@ -67,13 +67,13 @@ def pia_read_block_09(
 
     Returns
     -------
-    piahead : PiaHead09 or 0
+    sfdb_header : SFDBheader or 0
         Header object; if EOF at block start, returns 0 (to match MATLAB behavior).
     tps : np.ndarray or 0
     sps : np.ndarray or 0
     sft : np.ndarray (complex64) or 0
     """
-    h = PiaHead09()
+    h = SFDBheader()
     # define dtypes with explicit endianness
     f64 = np.dtype(endian + "f8")
     f32 = np.dtype(endian + "f4")
@@ -117,7 +117,7 @@ def pia_read_block_09(
         hd["freqp"] = float(_read_scalar(fid, f64))
         hd["taum"] = float(_read_scalar(fid, f64))
         hd["taup"] = float(_read_scalar(fid, f64))
-        # NOTE: MATLAB doesn't read lavesp in this branch, but later uses piahead.lavesp.
+        # NOTE: MATLAB doesn't read lavesp in this branch, but later uses sfdb_header.lavesp.
         # In practice, many files likely follow the "else" layout. If you truly have
         # bar-old blocks, you'll need the exact format spec for where lavesp lives.
         hd["lavesp"] = 0
@@ -166,17 +166,17 @@ def pia_read_block_09(
         sft = sft.astype(np.complex64, copy=False)
 
     # package header into dataclass-like object (keeping MATLAB field names)
-    piahead = PiaHead09()
+    sfdb_header = SFDBheader()
     for k, v in hd.items():
-        setattr(piahead, k, v)
+        setattr(sfdb_header, k, v)
 
-    return piahead, tps, sps, sft
+    return sfdb_header, tps, sps, sft
 
 
 # --- Example usage ---
 # with open("your.sfdb09", "rb") as f:
 #     while True:
-#         piahead, tps, sps, sft = pia_read_block_09(f, det=0, want_sft=True, endian="<")
-#         if piahead == 0:
+#         sfdb_header, tps, sps, sft = sfdb_read_an_FFT(f, det=0, want_sft=True, endian="<")
+#         if sfdb_header == 0:
 #             break
-#         # do something with piahead, tps, sps, sft
+#         # do something with sfdb_header, tps, sps, sft
