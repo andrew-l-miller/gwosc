@@ -1,2 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
+data/
+filesdone.txt
+*.ffl
+*.cache
