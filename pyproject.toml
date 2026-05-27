@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gwosc-cw"
+version = "0.0.1"
+license = "MIT"
+authors = [
+  { name = "Andrew L. Miller", email = "andrew.miller.ligo@gmail.com" },
+]
+description = "Tools for creating and reading SFDBs/SFTs for continuous gravitational-wave analyses"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "pyhough",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/andrew-l-miller/gwosc"
+Issues = "https://github.com/andrew-l-miller/gwosc/issues"
+Documentation = "https://github.com/andrew-l-miller/gwosc#readme"
+
+[tool.hatch.build.targets.wheel]
+packages = ["create_sfdbs", "make_sfts"]

@@ -1,5 +1,5 @@
 import sys
-from functions_to_download_data import *
+from create_sfdbs.functions_to_download_data import *
 
 if len(sys.argv) < 1:
     print("Usage: python3 function.py <save_dir>")
